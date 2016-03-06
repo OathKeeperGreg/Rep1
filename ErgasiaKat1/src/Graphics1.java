@@ -122,14 +122,13 @@ public class Graphics1 extends JFrame {
                         setVisible(false);
                         Menu m1 = new Menu();
                     } else {
+                        getXrewsh();
                         str = Integer.toString(xrewsh);
                         JOptionPane.showMessageDialog(frame,
                                 "Η καταχώρηση πραγματοποιήθηκε με επιτυχία." + "Η συνολική χρέωση είναι : " + str,
                                 "Επιτυχία Καταχώρησης",
                                 JOptionPane.PLAIN_MESSAGE);
                         setVisible(false);
-                        getXrewsh();
-                        System.out.println(xrewsh);
 
                         Menu m2 = new Menu();
                     }
