@@ -19,7 +19,6 @@ import javax.swing.JTextField;
 public class Graphics1 extends JFrame {
 
     JButton button3, button4;
-    JTextField textfield1, textfield2, textfield3, textfield4, textfield5;
     JPanel panel2;
     JLabel label1, label2, label3, label4, label5, label6, label7;
     JComboBox ComboBox1;
@@ -39,7 +38,7 @@ public class Graphics1 extends JFrame {
         label1.setBounds(80, 40, 120, 30);
         add(label1);
 
-        textfield1 = new JTextField();
+        JTextField textfield1 = new JTextField();
         textfield1.setBounds(210, 42, 140, 25);
         add(textfield1);
 
@@ -47,7 +46,7 @@ public class Graphics1 extends JFrame {
         label2.setBounds(80, 80, 120, 30);
         add(label2);
 
-        textfield2 = new JTextField();
+        JTextField textfield2 = new JTextField();
         textfield2.setBounds(210, 82, 140, 25);
         add(textfield2);
 
@@ -55,7 +54,7 @@ public class Graphics1 extends JFrame {
         label3.setBounds(80, 120, 120, 30);
         add(label3);
 
-        textfield3 = new JTextField();
+        JTextField textfield3 = new JTextField();
         textfield3.setBounds(210, 122, 140, 25);
         add(textfield3);
 
@@ -63,7 +62,7 @@ public class Graphics1 extends JFrame {
         label4.setBounds(80, 160, 120, 30);
         add(label4);
 
-        textfield4 = new JTextField();
+        JTextField textfield4 = new JTextField();
         textfield4.setBounds(210, 162, 140, 25);
         add(textfield4);
 
@@ -71,7 +70,7 @@ public class Graphics1 extends JFrame {
         label5.setBounds(80, 200, 120, 30);
         add(label5);
 
-        textfield5 = new JTextField();
+        JTextField textfield5 = new JTextField();
         textfield5.setBounds(210, 202, 140, 25);
         add(textfield5);
 
@@ -113,25 +112,30 @@ public class Graphics1 extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                boolean all_filled = true;
                 for (JTextField text : textfields) {
                     if (text.getText().trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(frame,
-                                "Η καταχώρηση δεν πραγματοποιήθηκε. Συμπληρώστε όλα τα κενά",
-                                "Αποτυχία Καταχώρησης",
-                                JOptionPane.PLAIN_MESSAGE);
-                        setVisible(false);
-                        Menu m1 = new Menu();
-                    } else {
-                        getXrewsh();
-                        str = Integer.toString(xrewsh);
-                        JOptionPane.showMessageDialog(frame,
-                                "Η καταχώρηση πραγματοποιήθηκε με επιτυχία." + "Η συνολική χρέωση είναι : " + str,
-                                "Επιτυχία Καταχώρησης",
-                                JOptionPane.PLAIN_MESSAGE);
-                        setVisible(false);
-
-                        Menu m2 = new Menu();
+                        all_filled = false;
+                        break;
                     }
+                }
+                if (!all_filled) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Η καταχώρηση δεν πραγματοποιήθηκε. Συμπληρώστε όλα τα κενά",
+                            "Αποτυχία Καταχώρησης",
+                            JOptionPane.PLAIN_MESSAGE);
+                    setVisible(false);
+                    Menu m1 = new Menu();
+                } else {
+                    getXrewsh();
+                    str = Integer.toString(xrewsh);
+                    JOptionPane.showMessageDialog(frame,
+                            "Η καταχώρηση πραγματοποιήθηκε με επιτυχία." + "Η συνολική χρέωση είναι : " + str,
+                            "Επιτυχία Καταχώρησης",
+                            JOptionPane.PLAIN_MESSAGE);
+                    setVisible(false);
+
+                    Menu m2 = new Menu();
                 }
             }
         });
