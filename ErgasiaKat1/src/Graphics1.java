@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -26,12 +27,19 @@ public class Graphics1 extends JFrame {
     JFrame frame;
     private String str;
     private int xrewsh = 0;
+    private ArrayList<JTextField> textfields = new ArrayList();
 
     public Graphics1() {
         super("Εισαγωγή κράτησης");
         setSize(450, 450);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
+
+        textfields.add(textfield1);
+        textfields.add(textfield2);
+        textfields.add(textfield3);
+        textfields.add(textfield4);
+        textfields.add(textfield5);
 
         label1 = new JLabel("Όνομα : ", JLabel.LEFT);
         label1.setBounds(80, 40, 120, 30);
@@ -100,21 +108,30 @@ public class Graphics1 extends JFrame {
         button4 = new JButton("Άκυρο");
         button4.setBounds(230, 330, 120, 30);
         add(button4);
-        
-        
-        
+
         button3.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame,
-                        "Η καταχώρηση πραγματοποιήθηκε με επιτυχία.",
-                        "Επιτυχία Καταχώρησης",
-                        JOptionPane.PLAIN_MESSAGE);
-                setVisible(false);
-                getXrewsh();
-                System.out.println(xrewsh);
-                Menu m = new Menu();
+                for (JTextField text : textfields) {
+                    if (text.getText().trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(frame,
+                                "Η καταχώρηση δεν πραγματοποιήθηκε. Συμπληρώστε όλα τα κενά",
+                                "Αποτυχία Καταχώρησης",
+                                JOptionPane.PLAIN_MESSAGE);
+                    } else {
+
+                        JOptionPane.showMessageDialog(frame,
+                                "Η καταχώρηση πραγματοποιήθηκε με επιτυχία.",
+                                "Επιτυχία Καταχώρησης",
+                                JOptionPane.PLAIN_MESSAGE);
+                        setVisible(false);
+                        getXrewsh();
+                        System.out.println(xrewsh);
+
+                        Menu m = new Menu();
+                    }
+                }
             }
         });
 
@@ -129,22 +146,20 @@ public class Graphics1 extends JFrame {
 
         setVisible(true);
     }
-    
-    public int getXrewsh(){
-        if(ComboBox1.getSelectedItem() == "Μονόκλινο"){
+
+    public int getXrewsh() {
+        if (ComboBox1.getSelectedItem() == "Μονόκλινο") {
             xrewsh = xrewsh + 40;
-        }
-        else if(ComboBox1.getSelectedItem() == "Δίκλινο"){
+        } else if (ComboBox1.getSelectedItem() == "Δίκλινο") {
             xrewsh = xrewsh + 50;
-        }
-        else if(ComboBox1.getSelectedItem() == "Τρίκλινο"){
+        } else if (ComboBox1.getSelectedItem() == "Τρίκλινο") {
             xrewsh = xrewsh + 65;
         }
-        
-        if(CheckBox1.isSelected()){
-            xrewsh = xrewsh +5;
+
+        if (CheckBox1.isSelected()) {
+            xrewsh = xrewsh + 5;
         }
-        
+
         return xrewsh;
     }
 
