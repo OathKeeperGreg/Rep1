@@ -35,12 +35,6 @@ public class Graphics1 extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-        textfields.add(textfield1);
-        textfields.add(textfield2);
-        textfields.add(textfield3);
-        textfields.add(textfield4);
-        textfields.add(textfield5);
-
         label1 = new JLabel("Όνομα : ", JLabel.LEFT);
         label1.setBounds(80, 40, 120, 30);
         add(label1);
@@ -109,6 +103,12 @@ public class Graphics1 extends JFrame {
         button4.setBounds(230, 330, 120, 30);
         add(button4);
 
+        textfields.add(textfield1);
+        textfields.add(textfield2);
+        textfields.add(textfield3);
+        textfields.add(textfield4);
+        textfields.add(textfield5);
+
         button3.addActionListener(new ActionListener() {
 
             @Override
@@ -119,17 +119,19 @@ public class Graphics1 extends JFrame {
                                 "Η καταχώρηση δεν πραγματοποιήθηκε. Συμπληρώστε όλα τα κενά",
                                 "Αποτυχία Καταχώρησης",
                                 JOptionPane.PLAIN_MESSAGE);
+                        setVisible(false);
+                        Menu m1 = new Menu();
                     } else {
-
+                        str = Integer.toString(xrewsh);
                         JOptionPane.showMessageDialog(frame,
-                                "Η καταχώρηση πραγματοποιήθηκε με επιτυχία.",
+                                "Η καταχώρηση πραγματοποιήθηκε με επιτυχία." + "Η συνολική χρέωση είναι : " + str,
                                 "Επιτυχία Καταχώρησης",
                                 JOptionPane.PLAIN_MESSAGE);
                         setVisible(false);
                         getXrewsh();
                         System.out.println(xrewsh);
 
-                        Menu m = new Menu();
+                        Menu m2 = new Menu();
                     }
                 }
             }
