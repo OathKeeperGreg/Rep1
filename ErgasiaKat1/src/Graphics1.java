@@ -6,10 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,6 +22,7 @@ import javax.swing.JTextField;
 public class Graphics1 extends JFrame {
 
     JButton button3, button4;
+    JTextField textfield1, textfield2, textfield3, textfield4, textfield5;
     JPanel panel2;
     JLabel label1, label2, label3, label4, label5, label6, label7;
     JComboBox ComboBox1;
@@ -38,7 +42,7 @@ public class Graphics1 extends JFrame {
         label1.setBounds(80, 40, 120, 30);
         add(label1);
 
-        JTextField textfield1 = new JTextField();
+        textfield1 = new JTextField();
         textfield1.setBounds(210, 42, 140, 25);
         add(textfield1);
 
@@ -46,7 +50,7 @@ public class Graphics1 extends JFrame {
         label2.setBounds(80, 80, 120, 30);
         add(label2);
 
-        JTextField textfield2 = new JTextField();
+        textfield2 = new JTextField();
         textfield2.setBounds(210, 82, 140, 25);
         add(textfield2);
 
@@ -54,7 +58,7 @@ public class Graphics1 extends JFrame {
         label3.setBounds(80, 120, 120, 30);
         add(label3);
 
-        JTextField textfield3 = new JTextField();
+        textfield3 = new JTextField();
         textfield3.setBounds(210, 122, 140, 25);
         add(textfield3);
 
@@ -62,7 +66,7 @@ public class Graphics1 extends JFrame {
         label4.setBounds(80, 160, 120, 30);
         add(label4);
 
-        JTextField textfield4 = new JTextField();
+        textfield4 = new JTextField();
         textfield4.setBounds(210, 162, 140, 25);
         add(textfield4);
 
@@ -70,7 +74,7 @@ public class Graphics1 extends JFrame {
         label5.setBounds(80, 200, 120, 30);
         add(label5);
 
-        JTextField textfield5 = new JTextField();
+        textfield5 = new JTextField();
         textfield5.setBounds(210, 202, 140, 25);
         add(textfield5);
 
@@ -124,8 +128,8 @@ public class Graphics1 extends JFrame {
                             "Η καταχώρηση δεν πραγματοποιήθηκε. Συμπληρώστε όλα τα κενά",
                             "Αποτυχία Καταχώρησης",
                             JOptionPane.PLAIN_MESSAGE);
-                    setVisible(false);
-                    Menu m1 = new Menu();
+                    setDefaultCloseOperation(EXIT_ON_CLOSE);
+
                 } else {
                     getXrewsh();
                     str = Integer.toString(xrewsh);
@@ -134,8 +138,19 @@ public class Graphics1 extends JFrame {
                             "Επιτυχία Καταχώρησης",
                             JOptionPane.PLAIN_MESSAGE);
                     setVisible(false);
+                    setDefaultCloseOperation(EXIT_ON_CLOSE);
+                    try {
+                        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("customers.txt"));
 
-                    Menu m2 = new Menu();
+                        Kratisi K1 = new Kratisi(10/5/16, 13/5/16, "Δίκλινο", true, "Greg", "Manitaras", "6950310012");
+                        out.writeObject(K1);
+                        out.writeObject(K2);
+                        out.writeObject(K3);
+                        out.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Graphics1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
                 }
             }
         });
@@ -145,7 +160,6 @@ public class Graphics1 extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
-                Menu a = new Menu();
             }
         });
 
@@ -168,17 +182,4 @@ public class Graphics1 extends JFrame {
         return xrewsh;
     }
 
-    public static void main(String[] args) throws IOException {
-
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("customers.txt"));
-
-        Customer C1 = new Customer("Name1", "bday1", "num1");
-        Customer C2 = new Customer("Name1", "bday1", "num1");
-        Customer C3 = new Customer("Name1", "bday1", "num1");
-
-        out.writeObject(C1);
-        out.writeObject(C2);
-        out.writeObject(C3);
-        out.close();
-    }
 }

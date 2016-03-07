@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public class Kratisi {
+public class Kratisi implements Serializable{
 
     private Date afixh;
     private Date anaxwrhsh;

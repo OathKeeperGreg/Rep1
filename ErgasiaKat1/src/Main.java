@@ -40,7 +40,6 @@ class Menu extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                setVisible(false);
                 Graphics1 g1 = new Graphics1();
             }
         });
@@ -51,6 +50,7 @@ class Menu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 Graphics2 g2 = new Graphics2();
+                setDefaultCloseOperation(EXIT_ON_CLOSE);
 
             }
         });
