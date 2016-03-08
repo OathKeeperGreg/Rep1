@@ -47,26 +47,26 @@ public class Graphics2 extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 
-                
+                //Search search = new Search();
                 
                 ObjectInputStream in = null;
                 try {
                     in = new ObjectInputStream(new FileInputStream("customers.txt"));
-                    Customer customer;
-                    while ((customer = (Customer) in.readObject()) != null) {
-
-                        System.out.println(customer.toString());
+                    Kratisi kratisi;
+                    while ((kratisi = (Kratisi) in.readObject()) != null) {
+                        
+                        System.out.println(kratisi.toString());
                     }
                     in.close();
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
+                   // Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
+                   // Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     try {
                         in.close();
                     } catch (IOException ex) {
-                        Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
+                        //Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }

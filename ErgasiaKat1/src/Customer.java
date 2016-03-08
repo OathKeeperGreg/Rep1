@@ -37,4 +37,8 @@ public class Customer implements Serializable {
         this.cust_number = cust_number;
     }
 
+    @Override
+    public String toString(){
+        return "Onoma : " + name + "Epitheto : " + surname + "Thlefwno : " + cust_number; 
+    }
 }

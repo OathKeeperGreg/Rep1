@@ -158,10 +158,9 @@ public class Graphics1 extends JFrame {
                             JOptionPane.PLAIN_MESSAGE);
                     setVisible(false);
                     setDefaultCloseOperation(EXIT_ON_CLOSE);
-                    try {
-                        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("customers.txt"));
+                    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("customers.txt",true))) {
 
-                        String name1, name2, name3, surname1, surname2, surname3, num1, num2, num3;
+                        String name1, surname1, num1;
                         boolean ch = false;
                         
                         Epilogh(ch);
@@ -169,13 +168,7 @@ public class Graphics1 extends JFrame {
                         name1 = textfield1.getText();
                         surname1 = textfield2.getText();
                         num1 = textfield3.getText();
-                        name2 = textfield1.getText();
-                        surname2 = textfield2.getText();
-                        num2 = textfield3.getText();
-                        name3 = textfield1.getText();
-                        surname3 = textfield2.getText();
-                        num3 = textfield3.getText();
-
+                        
                         int day1 = Integer.parseInt((String) c1.getSelectedItem());
                         int day2 = Integer.parseInt((String) c4.getSelectedItem());
                         int month1 = Integer.parseInt((String) c2.getSelectedItem());
@@ -184,23 +177,18 @@ public class Graphics1 extends JFrame {
                         int year2 = Integer.parseInt((String) c6.getSelectedItem());
 
                         Customer C1 = new Customer(name1, surname1, num1);
-                        Customer C2 = new Customer(name2, surname2, num2);
-                        Customer C3 = new Customer(name3, surname3, num3);
+                        
 
                         Date date1 = new Date(year1, month1, day1);
                         Date date2 = new Date(year2, month2, day2);
-                        String room1, room2, room3;
+                        String room1;
                         room1 = (String) ComboBox1.getSelectedItem();
-                        room2 = (String) ComboBox1.getSelectedItem();
-                        room3 = (String) ComboBox1.getSelectedItem();
+                        
 
                         Kratisi K1 = new Kratisi(date1, date2, room1, ch, C1);
-                        Kratisi K2 = new Kratisi(date1, date2, room2, ch, C2);
-                        Kratisi K3 = new Kratisi(date1, date2, room3, ch, C3);
+                        
                         out.writeObject(K1);
-                        out.writeObject(K2);
-                        out.writeObject(K3);
-                        out.close();
+                        
                     } catch (IOException ex) {
                         Logger.getLogger(Graphics1.class.getName()).log(Level.SEVERE, null, ex);
                     }

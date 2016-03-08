@@ -1,7 +1,8 @@
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class Kratisi implements Serializable{
+public class Kratisi implements Serializable {
 
     private Date afixh;
     private Date anaxwrhsh;
@@ -56,6 +57,13 @@ public class Kratisi implements Serializable{
     public void setPrwino(boolean prwino) {
         this.prwino = prwino;
     }
-    
 
+    @Override
+    public String toString() {
+        if (prwino = true) {
+            return "Hmeromhnia afixhs : " + afixh + " Hmeromhnia anaxwrhshs : " + anaxwrhsh + " Typos dwmatiou : " + type + " Prwino : " + " Nai " + " Pelaths : " + c;
+        } else {
+            return "Hmeromhnia afixhs : " + afixh + " Hmeromhnia anaxwrhshs : " + anaxwrhsh + " Typos dwmatiou : " + type + " Prwino : " + " Oxi " + " Pelaths : " + c;
+        }
+    }
 }
