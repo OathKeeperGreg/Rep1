@@ -5,14 +5,15 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JPanel;
-
-
 
 public class Graphics2 extends JFrame {
 
@@ -23,10 +24,10 @@ public class Graphics2 extends JFrame {
         super("Εμφάνιση των κρατήσεων");
         setSize(450, 450);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+
         button5 = new JButton("Αναζήτηση με βάση το επίθετο");
         button6 = new JButton("Αναζήτηση με βάση την ημερομηνία άφιξης");
-        
+
         Container c2 = getContentPane();
         c2.setLayout(new GridLayout(2, 1));
         panel3 = new JPanel();
@@ -40,35 +41,39 @@ public class Graphics2 extends JFrame {
         c2.add(panel3);
         c2.add(panel4);
         setVisible(true);
-        
-        button5.addActionListener(new ActionListener(){
-            
+
+        button5.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent ae) {
                 
-            }
-            
-        });
+                
+                
+                ObjectInputStream in = null;
+                try {
+                    in = new ObjectInputStream(new FileInputStream("customers.txt"));
+                    Customer customer;
+                    while ((customer = (Customer) in.readObject()) != null) {
 
-        
+                        System.out.println(customer.toString());
+                    }
+                    in.close();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException | ClassNotFoundException ex) {
+                    Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    try {
+                        in.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+
+        });
 
         setVisible(true);
     }
-    
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        ObjectInputStream in = new ObjectInputStream(new FileInputStream("customers.txt"));
 
-        Customer customer;
-
-        while ((customer = (Customer) in.readObject()) != null) {
-
-            System.out.println(customer.toString());
-        }
-
-        in.close();
-
-    }
-
-
-    
 }
