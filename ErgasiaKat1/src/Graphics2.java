@@ -1,4 +1,5 @@
-
+import java.util.ArrayList;
+import java.io.EOFException;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -46,6 +47,24 @@ public class Graphics2 extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
+<<<<<<< HEAD
+                
+                //Search search = new Search();
+                
+                ArrayList<Kratisi> kratiseis = null;
+                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("customers.txt"))) {
+                  kratiseis = (ArrayList<Kratisi>) in.readObject();
+                } catch (ClassNotFoundException | IOException ex) {
+                  kratiseis = new ArrayList<Kratisi>();
+                } 
+                    
+                for (Kratisi kratisi : kratiseis)
+                {
+                    System.out.println(kratisi.toString());
+                }
+            }
+=======
+>>>>>>> fd1e9862964aeac77ae18fec37fd59fb06227b32
 
                 SearchSurname search = new SearchSurname();
                 setDefaultCloseOperation(EXIT_ON_CLOSE);
