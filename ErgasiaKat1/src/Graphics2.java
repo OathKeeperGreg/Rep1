@@ -51,20 +51,12 @@ public class Graphics2 extends JFrame {
                 //Search search = new Search();
                 
                 ArrayList<Kratisi> kratiseis = null;
-                ObjectInputStream in = null;
-                try {
-                  in = new ObjectInputStream(new FileInputStream("customers.txt"));
+                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("customers.txt"))) {
                   kratiseis = (ArrayList<Kratisi>) in.readObject();
                 } catch (ClassNotFoundException | IOException ex) {
                   kratiseis = new ArrayList<Kratisi>();
                 } 
                     
-                try {
-                  if (in != null) in.close();
-                } catch (IOException ex) {
-                  //...
-                }
-
                 for (Kratisi kratisi : kratiseis)
                 {
                     System.out.println(kratisi.toString());

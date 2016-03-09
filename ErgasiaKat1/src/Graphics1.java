@@ -162,18 +162,10 @@ public class Graphics1 extends JFrame {
                         setDefaultCloseOperation(EXIT_ON_CLOSE);
                         
                         ArrayList<Kratisi> kratiseis = null;
-                        ObjectInputStream in = null;
-                        try {
-                           in = new ObjectInputStream(new FileInputStream("customers.txt"));
+                        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("customers.txt"))) {
                            kratiseis = (ArrayList<Kratisi>) in.readObject();
                         } catch (ClassNotFoundException | IOException ex) {
                            kratiseis = new ArrayList<Kratisi>();
-                        }
-                        
-                        try {
-                          if (in!= null) in.close();
-                        } catch (IOException ex) {
-                          System.out.println("Ioexception when closing input file"); 
                         }
 
                         String name1, surname1, num1;
@@ -204,19 +196,11 @@ public class Graphics1 extends JFrame {
                         Kratisi K1 = new Kratisi(date1, date2, room1, ch, C1);
                         kratiseis.add(K1);
 
-                        ObjectOutputStream out = null;
-                        try {
-                          out = new ObjectOutputStream( new FileOutputStream("./customers.txt"));
+                       try (ObjectOutputStream out = new ObjectOutputStream( new FileOutputStream("./customers.txt"))) {
                           out.writeObject(kratiseis);    
-                        } catch (IOException ex) {
+                       } catch (IOException ex) {
                           //...
-                        }
-                          
-                        try {
-                            if (out != null) out.close();
-                        } catch (IOException ex) {
-                            //...
-                        }
+                       }
                     }
                 }
         });
