@@ -1,4 +1,5 @@
-
+import java.util.ArrayList;
+import java.io.EOFException;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -49,25 +50,24 @@ public class Graphics2 extends JFrame {
                 
                 //Search search = new Search();
                 
+                ArrayList<Kratisi> kratiseis = null;
                 ObjectInputStream in = null;
                 try {
-                    in = new ObjectInputStream(new FileInputStream("customers.txt"));
-                    Kratisi kratisi;
-                    while ((kratisi = (Kratisi) in.readObject()) != null) {
-                        
-                        System.out.println(kratisi.toString());
-                    }
-                    in.close();
-                } catch (FileNotFoundException ex) {
-                   // Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException | ClassNotFoundException ex) {
-                   // Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    try {
-                        in.close();
-                    } catch (IOException ex) {
-                        //Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                  in = new ObjectInputStream(new FileInputStream("customers.txt"));
+                  kratiseis = (ArrayList<Kratisi>) in.readObject();
+                } catch (ClassNotFoundException | IOException ex) {
+                  kratiseis = new ArrayList<Kratisi>();
+                } 
+                    
+                try {
+                  if (in != null) in.close();
+                } catch (IOException ex) {
+                  //...
+                }
+
+                for (Kratisi kratisi : kratiseis)
+                {
+                    System.out.println(kratisi.toString());
                 }
             }
 

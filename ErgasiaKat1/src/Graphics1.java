@@ -1,9 +1,11 @@
-
+import java.io.EOFException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -133,42 +135,56 @@ public class Graphics1 extends JFrame {
 
         button3.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                boolean all_filled = true;
-                for (JTextField text : textfields) {
-                    if (text.getText().trim().isEmpty()) {
-                        all_filled = false;
-                        break;
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    boolean all_filled = true;
+                    for (JTextField text : textfields) {
+                        if (text.getText().trim().isEmpty()) {
+                            all_filled = false;
+                            break;
+                        }
                     }
-                }
-                if (!all_filled) {
-                    JOptionPane.showMessageDialog(frame,
+                    if (!all_filled) {
+                        JOptionPane.showMessageDialog(frame,
                             "Η καταχώρηση δεν πραγματοποιήθηκε. Συμπληρώστε όλα τα κενά",
                             "Αποτυχία Καταχώρησης",
                             JOptionPane.PLAIN_MESSAGE);
-                    setDefaultCloseOperation(EXIT_ON_CLOSE);
+                        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-                } else {
-                    getXrewsh();
-                    str = Integer.toString(xrewsh);
-                    JOptionPane.showMessageDialog(frame,
-                            "Η καταχώρηση πραγματοποιήθηκε με επιτυχία." + "Η συνολική χρέωση είναι : " + str,
-                            "Επιτυχία Καταχώρησης",
-                            JOptionPane.PLAIN_MESSAGE);
-                    setVisible(false);
-                    setDefaultCloseOperation(EXIT_ON_CLOSE);
-                    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("customers.txt",true))) {
+                    } else {
+                        getXrewsh();
+                        str = Integer.toString(xrewsh);
+                        JOptionPane.showMessageDialog(frame,
+                                "Η καταχώρηση πραγματοποιήθηκε με επιτυχία." + "Η συνολική χρέωση είναι : " + str,
+                                "Επιτυχία Καταχώρησης",
+                                JOptionPane.PLAIN_MESSAGE);
+                        setVisible(false);
+                        setDefaultCloseOperation(EXIT_ON_CLOSE);
+                        
+                        ArrayList<Kratisi> kratiseis = null;
+                        ObjectInputStream in = null;
+                        try {
+                           in = new ObjectInputStream(new FileInputStream("customers.txt"));
+                           kratiseis = (ArrayList<Kratisi>) in.readObject();
+                        } catch (ClassNotFoundException | IOException ex) {
+                           kratiseis = new ArrayList<Kratisi>();
+                        }
+                        
+                        try {
+                          if (in!= null) in.close();
+                        } catch (IOException ex) {
+                          System.out.println("Ioexception when closing input file"); 
+                        }
 
                         String name1, surname1, num1;
                         boolean ch = false;
-                        
+
                         Epilogh(ch);
 
                         name1 = textfield1.getText();
                         surname1 = textfield2.getText();
                         num1 = textfield3.getText();
-                        
+
                         int day1 = Integer.parseInt((String) c1.getSelectedItem());
                         int day2 = Integer.parseInt((String) c4.getSelectedItem());
                         int month1 = Integer.parseInt((String) c2.getSelectedItem());
@@ -177,33 +193,41 @@ public class Graphics1 extends JFrame {
                         int year2 = Integer.parseInt((String) c6.getSelectedItem());
 
                         Customer C1 = new Customer(name1, surname1, num1);
-                        
+
 
                         Date date1 = new Date(year1, month1, day1);
                         Date date2 = new Date(year2, month2, day2);
                         String room1;
                         room1 = (String) ComboBox1.getSelectedItem();
-                        
+
 
                         Kratisi K1 = new Kratisi(date1, date2, room1, ch, C1);
-                        
-                        out.writeObject(K1);
-                        
-                    } catch (IOException ex) {
-                        Logger.getLogger(Graphics1.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        kratiseis.add(K1);
 
+                        ObjectOutputStream out = null;
+                        try {
+                          out = new ObjectOutputStream( new FileOutputStream("./customers.txt"));
+                          out.writeObject(kratiseis);    
+                        } catch (IOException ex) {
+                          //...
+                        }
+                          
+                        try {
+                            if (out != null) out.close();
+                        } catch (IOException ex) {
+                            //...
+                        }
+                    }
                 }
-            }
         });
 
         button4.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-            }
-        });
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    setVisible(false);
+                }
+                });
 
         setVisible(true);
     }
