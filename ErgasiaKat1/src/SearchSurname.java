@@ -36,9 +36,7 @@ public class SearchSurname extends JFrame {
 
         button7.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ae) {
-                
-                
+            public void actionPerformed(ActionEvent ae) {                
 
                 ArrayList<Kratisi> kratiseis = null;
                 try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("customers.txt"))) {
@@ -48,7 +46,7 @@ public class SearchSurname extends JFrame {
                 }
 
                 for (Kratisi kratisi : kratiseis) {
-                    Customer cust = null;
+                    Customer cust = kratisi.getC();
                     if (textfield4.getText().equals(cust.getSurname()))  {
                         System.out.println(kratisi.toString());
                     }
