@@ -14,7 +14,7 @@ class Menu extends JFrame {
     JButton button1, button2;
     JPanel panel1, panel2;
 
-    public Menu() {
+    public Menu() { //Arxiko menu me epiloges
         super("Menu");
         setSize(450, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,7 +22,7 @@ class Menu extends JFrame {
         button1 = new JButton("Εισαγωγή κράτησης");
         button2 = new JButton("Εμφάνιση των κρατήσεων");
 
-        Container c1 = getContentPane();
+        Container c1 = getContentPane();//dhmiourgia GridLayout gia na pane ta buttons to 1 katw apo to allo
         c1.setLayout(new GridLayout(2, 1));
         panel1 = new JPanel();
         panel1.setLayout(new FlowLayout());
@@ -36,7 +36,7 @@ class Menu extends JFrame {
         c1.add(panel2);
         setVisible(true);
 
-        button1.addActionListener(new ActionListener() {
+        button1.addActionListener(new ActionListener() { //action gia thn kataxwrhsh
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -44,7 +44,7 @@ class Menu extends JFrame {
             }
         });
 
-        button2.addActionListener(new ActionListener() {
+        button2.addActionListener(new ActionListener() { //action gia thn anazhthsh
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -54,10 +54,6 @@ class Menu extends JFrame {
 
             }
         });
-    }
-    
-    public void getXrewsh(){
-        
     }
 }
 

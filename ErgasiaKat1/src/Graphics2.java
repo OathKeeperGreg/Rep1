@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -47,6 +48,7 @@ public class Graphics2 extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
+<<<<<<< HEAD
                 
                 //Search search = new Search();
                 
@@ -62,10 +64,12 @@ public class Graphics2 extends JFrame {
                     System.out.println(kratisi.toString());
                 }
             }
+=======
+>>>>>>> fd1e9862964aeac77ae18fec37fd59fb06227b32
 
+                SearchSurname search = new SearchSurname();
+                setDefaultCloseOperation(EXIT_ON_CLOSE);
+            }
         });
-
-        setVisible(true);
     }
-
 }

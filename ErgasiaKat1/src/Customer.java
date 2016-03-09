@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 
-public class Customer implements Serializable {
+public class Customer implements Serializable { //class pelath
 
     private String name;
     private String surname;
@@ -39,6 +39,6 @@ public class Customer implements Serializable {
 
     @Override
     public String toString(){
-        return "Onoma : " + name + "Epitheto : " + surname + "Thlefwno : " + cust_number; 
+        return "Όνομα : " + name + "Επίθετο : " + surname + "Τηλέφωνο : " + cust_number; 
     }
 }

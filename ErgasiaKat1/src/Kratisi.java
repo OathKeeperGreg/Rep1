@@ -2,7 +2,7 @@
 import java.io.Serializable;
 import java.util.Date;
 
-public class Kratisi implements Serializable {
+public class Kratisi implements Serializable { //class krathshs
 
     private Date afixh;
     private Date anaxwrhsh;
@@ -61,9 +61,9 @@ public class Kratisi implements Serializable {
     @Override
     public String toString() {
         if (prwino = true) {
-            return "Hmeromhnia afixhs : " + afixh + " Hmeromhnia anaxwrhshs : " + anaxwrhsh + " Typos dwmatiou : " + type + " Prwino : " + " Nai " + " Pelaths : " + c;
+            return "Ημερομηνία Άφιξης : " + afixh + " Ημερομηνία Αναχώρησης : " + anaxwrhsh + " Τύπος δωματίου : " + type + " Πρωινό : " + " Ναι " + " Πελάτης : " + c;
         } else {
-            return "Hmeromhnia afixhs : " + afixh + " Hmeromhnia anaxwrhshs : " + anaxwrhsh + " Typos dwmatiou : " + type + " Prwino : " + " Oxi " + " Pelaths : " + c;
+            return "Ημερομηνία Άφιξης : " + afixh + " Ημερομηνία Αναχώρησης : " + anaxwrhsh + " Τύπος δωματίου : " + type + " Πρωινό : " + " Όχι " + " Πελάτης : " + c;
         }
     }
 }
