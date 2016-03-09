@@ -41,7 +41,6 @@ public class Graphics2 extends JFrame {
 
         c2.add(panel3);
         c2.add(panel4);
-        setVisible(true);
 
         button5.addActionListener(new ActionListener() {
 
@@ -52,5 +51,7 @@ public class Graphics2 extends JFrame {
                 setDefaultCloseOperation(EXIT_ON_CLOSE);
             }
         });
+        
+        setVisible(true);
     }
 }

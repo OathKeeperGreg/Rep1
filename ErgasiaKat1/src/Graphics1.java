@@ -208,8 +208,7 @@ public class Graphics1 extends JFrame {
         button4.addActionListener(new ActionListener() { //action gia Akuro 
 
             @Override
-            public void actionPerformed(ActionEvent e
-            ) {
+            public void actionPerformed(ActionEvent e) {
                 setVisible(false);
             }
         });

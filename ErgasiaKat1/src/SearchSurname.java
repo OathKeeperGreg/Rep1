@@ -49,10 +49,13 @@ public class SearchSurname extends JFrame {
                     Customer cust = kratisi.getC();
                     if (textfield4.getText().equals(cust.getSurname()))  {
                         System.out.println(kratisi.toString());
+                        break;
                     }
                 }   
-                setVisible(true);
             }
+
         });
+       
+        setVisible(true);
     }
 }
