@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -46,34 +47,10 @@ public class Graphics2 extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-                
-                //Search search = new Search();
-                
-                ObjectInputStream in = null;
-                try {
-                    in = new ObjectInputStream(new FileInputStream("customers.txt"));
-                    Kratisi kratisi;
-                    while ((kratisi = (Kratisi) in.readObject()) != null) {
-                        
-                        System.out.println(kratisi.toString());
-                    }
-                    in.close();
-                } catch (FileNotFoundException ex) {
-                   // Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException | ClassNotFoundException ex) {
-                   // Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    try {
-                        in.close();
-                    } catch (IOException ex) {
-                        //Logger.getLogger(Graphics2.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+
+                SearchSurname search = new SearchSurname();
+                setDefaultCloseOperation(EXIT_ON_CLOSE);
             }
-
         });
-
-        setVisible(true);
     }
-
 }

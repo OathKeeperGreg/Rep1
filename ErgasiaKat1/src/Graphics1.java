@@ -2,13 +2,14 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -39,12 +40,12 @@ public class Graphics1 extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-        String[] day = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
+        String[] day = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
         String[] month = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
         String[] year = {"2016", "2017", "2018", "2019", "2020"};
 
-        label1 = new JLabel("Όνομα : ", JLabel.LEFT);
-        label1.setBounds(80, 40, 120, 30);
+        label1 = new JLabel("Όνομα : ", JLabel.LEFT); //sto sugkekrimeno frame xrthsimopoiw labels pou topothetountai aristera
+        label1.setBounds(80, 40, 120, 30);            //kai textfields/boxes deksia
         add(label1);
 
         textfield1 = new JTextField();
@@ -131,7 +132,7 @@ public class Graphics1 extends JFrame {
         textfields.add(textfield2);
         textfields.add(textfield3);
 
-        button3.addActionListener(new ActionListener() {
+        button3.addActionListener(new ActionListener() { //action gia epibebaiwsh kataxwrhshs
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -158,49 +159,57 @@ public class Graphics1 extends JFrame {
                             JOptionPane.PLAIN_MESSAGE);
                     setVisible(false);
                     setDefaultCloseOperation(EXIT_ON_CLOSE);
-                    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("customers.txt",true))) {
+                    ArrayList<Kratisi> kratiseis = null;
+                    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("customers.txt"))) {
+                        kratiseis = (ArrayList<Kratisi>) in.readObject();
+                    } catch (ClassNotFoundException | IOException ex) {
+                        kratiseis = new ArrayList<Kratisi>();
+                    }
 
-                        String name1, surname1, num1;
-                        boolean ch = false;
-                        
-                        Epilogh(ch);
+                    String name1, surname1, num1;
+                    boolean ch = false;
+                    int day1 = Integer.parseInt((String) c1.getSelectedItem());
+                    int day2 = Integer.parseInt((String) c4.getSelectedItem());
+                    int month1 = Integer.parseInt((String) c2.getSelectedItem());
+                    int month2 = Integer.parseInt((String) c5.getSelectedItem());
+                    int year1 = Integer.parseInt((String) c3.getSelectedItem());
+                    int year2 = Integer.parseInt((String) c6.getSelectedItem());
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(year1, month1 - 1, day1);
+                    Date date1 = cal.getTime();
+                    cal.set(year2, month2 - 1, day2);
+                    Date date2 = cal.getTime();
 
-                        name1 = textfield1.getText();
-                        surname1 = textfield2.getText();
-                        num1 = textfield3.getText();
-                        
-                        int day1 = Integer.parseInt((String) c1.getSelectedItem());
-                        int day2 = Integer.parseInt((String) c4.getSelectedItem());
-                        int month1 = Integer.parseInt((String) c2.getSelectedItem());
-                        int month2 = Integer.parseInt((String) c5.getSelectedItem());
-                        int year1 = Integer.parseInt((String) c3.getSelectedItem());
-                        int year2 = Integer.parseInt((String) c6.getSelectedItem());
+                    Epilogh(ch);
 
-                        Customer C1 = new Customer(name1, surname1, num1);
-                        
+                    name1 = textfield1.getText();
+                    surname1 = textfield2.getText();
+                    num1 = textfield3.getText();
 
-                        Date date1 = new Date(year1, month1, day1);
-                        Date date2 = new Date(year2, month2, day2);
-                        String room1;
-                        room1 = (String) ComboBox1.getSelectedItem();
-                        
+                    Customer C1 = new Customer(name1, surname1, num1);
 
-                        Kratisi K1 = new Kratisi(date1, date2, room1, ch, C1);
-                        
-                        out.writeObject(K1);
-                        
+                    String room1;
+                    room1 = (String) ComboBox1.getSelectedItem();
+
+                    Kratisi K1 = new Kratisi(date1, date2, room1, ch, C1);
+                    kratiseis.add(K1);
+
+                    try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("./customers.txt"))) {
+                        out.writeObject(kratiseis);
                     } catch (IOException ex) {
-                        Logger.getLogger(Graphics1.class.getName()).log(Level.SEVERE, null, ex);
+                        //...
                     }
 
                 }
             }
-        });
+        }
+        );
 
-        button4.addActionListener(new ActionListener() {
+        button4.addActionListener(new ActionListener() { //action gia Akuro 
 
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e
+            ) {
                 setVisible(false);
             }
         });
@@ -208,7 +217,7 @@ public class Graphics1 extends JFrame {
         setVisible(true);
     }
 
-    public int getXrewsh() {
+    public int getXrewsh() { //upologismos xrewshs
         if (ComboBox1.getSelectedItem() == "Μονόκλινο") {
             xrewsh = xrewsh + 40;
         } else if (ComboBox1.getSelectedItem() == "Δίκλινο") {
@@ -224,7 +233,7 @@ public class Graphics1 extends JFrame {
         return xrewsh;
     }
 
-    public boolean Epilogh(boolean choice) {
+    public boolean Epilogh(boolean choice) { //elegxos gia to checkbox
         if (CheckBox1.isSelected()) {
             choice = true;
             return choice;
