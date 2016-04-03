@@ -26,15 +26,17 @@ import javax.swing.JTextField;
 //grafika gia thn kataxwrhsh pelath
 public class Graphics1 extends JFrame {
 
+    
+
     JButton button3, button4;
     JTextField textfield1, textfield2, textfield3, textfield4, textfield5;
     JPanel panel2;
     JLabel label1, label2, label3, label4, label5, label6, label7;
-    JComboBox c1, c2, c3, c4, c5, c6, ComboBox1;
-    JCheckBox CheckBox1;
+    static JComboBox c1, c2, c3, c4, c5, c6, ComboBox1;
+    static JCheckBox CheckBox1;
     JFrame frame;
     private String str;
-    private int xrewsh = 0;
+    private static int xrewsh = 0;
     private ArrayList<JTextField> textfields = new ArrayList();
 
     public Graphics1() {
@@ -154,20 +156,13 @@ public class Graphics1 extends JFrame {
                     setDefaultCloseOperation(EXIT_ON_CLOSE);
 
                 } else {
-                    getXrewsh();
-                    str = Integer.toString(xrewsh);
                     JOptionPane.showMessageDialog(frame,
-                            "Η καταχώρηση πραγματοποιήθηκε με επιτυχία." + "Η συνολική χρέωση είναι : " + str,
+                            "Η καταχώρηση πραγματοποιήθηκε με επιτυχία.",
                                 "Επιτυχία Καταχώρησης",
                             JOptionPane.PLAIN_MESSAGE);
                     setVisible(false);
                     setDefaultCloseOperation(EXIT_ON_CLOSE);
-                    ArrayList<Kratisi> kratiseis = null;
-                    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("customers.txt"))) {
-                        kratiseis = (ArrayList<Kratisi>) in.readObject();
-                    } catch (ClassNotFoundException | IOException ex) {
-                        kratiseis = new ArrayList<Kratisi>();
-                    }
+                    
 
                     String name1, surname1, num1;
                     boolean ch = false;
@@ -195,10 +190,11 @@ public class Graphics1 extends JFrame {
                     room1 = (String) ComboBox1.getSelectedItem();
 
                     Kratisi K1 = new Kratisi(date1, date2, room1, ch, C1);
-                    kratiseis.add(K1);
+                   // kratiseis.add(K1);
 
                     try {
                         Main.outstream.writeObject("INSERT");
+                        Main.outstream.writeObject(K1);
                     } catch (IOException ex) {
                         Logger.getLogger(Graphics1.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -220,7 +216,7 @@ public class Graphics1 extends JFrame {
         setVisible(true);
     }
 
-    public int getXrewsh() { //upologismos xrewshs
+    public static int getXrewsh() { //upologismos xrewshs
         if (ComboBox1.getSelectedItem() == "Μονόκλινο") {
             xrewsh = xrewsh + 40;
         } else if (ComboBox1.getSelectedItem() == "Δίκλινο") {

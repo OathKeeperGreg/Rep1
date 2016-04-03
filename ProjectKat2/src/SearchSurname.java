@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,7 +16,7 @@ public class SearchSurname extends JFrame {
 
     JButton button7;
     JLabel label8;
-    JTextField textfield4;
+    static JTextField textfield4;
 
     public SearchSurname() {
         super("Αναζήτηση με βάση το επώνυμο");
@@ -38,20 +40,18 @@ public class SearchSurname extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae) {                
 
-                ArrayList<Kratisi> kratiseis = null;
-                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("customers.txt"))) {
-                    kratiseis = (ArrayList<Kratisi>) in.readObject();
-                } catch (ClassNotFoundException | IOException ex) {
-                    kratiseis = new ArrayList<Kratisi>();
+                try {
+                    Main.outstream.writeObject("SEARCH");
+                    Main.outstream.writeObject(textfield4.getText());
+                } catch (IOException ex) {
+                    Logger.getLogger(SearchSurname.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-                for (Kratisi kratisi : kratiseis) {
-                    Client cust = kratisi.getC();
-                    if (textfield4.getText().equals(cust.getSurname()))  {
-                        System.out.println(kratisi.toString());
-                        break;
-                    }
-                }   
+                
+                try {      
+                    Main.outstream.writeObject("END");
+                } catch (IOException ex) {
+                    Logger.getLogger(SearchSurname.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
         });
