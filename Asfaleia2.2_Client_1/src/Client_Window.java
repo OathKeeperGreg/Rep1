@@ -1,5 +1,4 @@
 
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -9,7 +8,6 @@ import static java.lang.Integer.parseInt;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -18,18 +16,25 @@ import javax.swing.Timer;
 
 public class Client_Window extends javax.swing.JFrame {
 
-    protected static User Current_User = new User("Greg ", "6666");
+    protected static User Current_User = new User("Greg ", "6666", false);
     protected static User Inv_Users;
+    protected static int Port;
     protected static ServerSocket server;
-    public static Socket sck;    
+    public static Socket sck;
     public static ObjectOutputStream OUT;
     public static ObjectInputStream IN;
+    protected static ArrayList<User> AliveUsersList;
+    protected static int address;
+    protected static boolean first = false;
+    protected static ArrayList<User> MultiChatList;
 
-    /**
-     * Creates new form Client_Window
-     */
     public Client_Window() throws IOException {
         this.setVisible(true);
+        address = 6666;
+        MultiChatList = new ArrayList<User>();
+        sck = new Socket("127.0.0.1", 5555); //socket gia na steilw stoixeia kai na sundethw
+        OUT = new ObjectOutputStream(sck.getOutputStream()); //Δημιουργιία ροών προς τον Client
+        IN = new ObjectInputStream(sck.getInputStream());
         initComponents();
     }
 
@@ -43,7 +48,7 @@ public class Client_Window extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jToggleButton2 = new javax.swing.JToggleButton();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -87,10 +92,10 @@ public class Client_Window extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Chat");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.setText("Multi-Chat");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -113,8 +118,8 @@ public class Client_Window extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2)
-                                .addGap(66, 66, 66)))
+                                .addComponent(jButton3)
+                                .addGap(148, 148, 148)))
                         .addComponent(list1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(35, 35, 35))
         );
@@ -129,7 +134,7 @@ public class Client_Window extends javax.swing.JFrame {
                         .addGap(36, 36, 36)
                         .addComponent(jLabel1)
                         .addGap(73, 73, 73)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton3)))
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jToggleButton2)
@@ -141,39 +146,33 @@ public class Client_Window extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        try {
-            sck = new Socket("127.0.0.1", 5555); //socket gia na steilw stoixeia kai na sundethw
-            OUT = new ObjectOutputStream(sck.getOutputStream()); //Δημιουργιία ροών προς τον Client
-            IN = new ObjectInputStream(sck.getInputStream());
-            int delay = 3000; //milliseconds
-            ArrayList<String> AliveUsersList = new <String> ArrayList();
-            ActionListener taskPerformer = new ActionListener() { //action gia na stelnei o xrhsths to heartbeat
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    try {
+        int delay = 3000;
+        ActionListener taskPerformer = new ActionListener() { //action gia na stelnei o xrhsths to heartbeat
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                try {
 
-                        Message stoixeia = new Message(Current_User.getNickname(), Current_User.getPort(), "Heartbeat_Message");
-                        OUT.writeObject(stoixeia);
-                        OUT.flush();
-
-                        list1.removeAll();
-                        Message list = (Message) IN.readObject();
-                       // AliveUsersList=(list.getMessage1());                      
-                        for (int i = 0; i < AliveUsersList.size(); i++) {
-                            list1.add(AliveUsersList.get(i));
-                        }
-
-                    } catch (IOException ex) {
-                        Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
+                    Message stoixeia = new Message(Current_User.getNickname(), Current_User.getPort(), "Heartbeat_Message", Current_User.isStatus());
+                    OUT.writeObject(stoixeia);
+                    OUT.flush();
+                    AliveUsersList = new <User> ArrayList();
+                    list1.removeAll();
+                    Message list = (Message) IN.readObject();
+                    AliveUsersList = ((ArrayList<User>) list.getMessage1());
+                    for (int i = 0; i < AliveUsersList.size(); i++) {
+                        list1.add(AliveUsersList.get(i).getNickname());
                     }
+
+                } catch (IOException ex) {
+                    Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            };
-            new Timer(delay, taskPerformer).start();
-        } catch (IOException ex) {
-            Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            }
+        };
+        new Timer(delay, taskPerformer).start();
+        ListeningThread listen = new ListeningThread(address);
+        listen.start();
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -182,7 +181,7 @@ public class Client_Window extends javax.swing.JFrame {
             ObjectOutputStream OUT = new ObjectOutputStream(sck.getOutputStream()); //Δημιουργιία ροών προς τον Client
             ObjectInputStream IN = new ObjectInputStream(sck.getInputStream());
 
-            Message mes1 = new Message(Current_User.getNickname(), Current_User.getPort(), "Register_Message"); //stelnw sto server nickname kai i2p adress
+            Message mes1 = new Message(Current_User.getNickname(), Current_User.getPort(), "Register_Message", Current_User.isStatus()); //stelnw sto server nickname kai i2p adress
             OUT.writeObject(mes1);
             OUT.flush();
 
@@ -190,9 +189,9 @@ public class Client_Window extends javax.swing.JFrame {
             ArrayList<User> OnlineUsersList = new <User> ArrayList();
 
             getOnlineList = (Message) IN.readObject();
-            OnlineUsersList = ((ArrayList <User>) getOnlineList.getMessage1());
+            OnlineUsersList = ((ArrayList<User>) getOnlineList.getMessage1());
             System.out.println(getOnlineList.getMessage1());
-            
+
             if (getOnlineList.getMessage2().equals("Online")) { //an pathsei pali o idios user register
                 JOptionPane.showMessageDialog(null, "The user has already registered");
             } else {
@@ -204,7 +203,6 @@ public class Client_Window extends javax.swing.JFrame {
                 System.out.println("List : " + getOnlineList.getMessage1());
                 JOptionPane.showMessageDialog(null, "You have succesfully registered !");
             }
-            sck.close();
 
         } catch (IOException ex) {
             Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
@@ -213,41 +211,30 @@ public class Client_Window extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {                                         
-            String s = list1.getSelectedItem().toString();
-            String[] parts = s.split(" ");
-            String part1 = parts[0]; //username
-            String part2 = parts[1]; //password
-            
-            Inv_Users = new User(part1, part2);
-            Syndeseis connections = new Syndeseis(part2, sck);
-            connections.start();
-            
-            try {
-                InviteToChatThread thread = new InviteToChatThread(Current_User.getPort(), part2);
-                thread.start();
-                Chat_Window chat = new Chat_Window();
-            } catch (IOException ex) {
-                Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            if (server.isBound()) {
-                try {
-                    AnswerToInviteThread thread1 = new AnswerToInviteThread(part2);
-                    thread1.start();
-                } catch (IOException ex) {
-                    Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            String[] s = list1.getSelectedItems();
+            for (int j = 0; j < s.length; j++) {
+                for (int i = 0; i < AliveUsersList.size(); i++) {
+                    if (s[j].equals(AliveUsersList.get(i).getNickname())) {
+                        if (AliveUsersList.get(i).isStatus() == false) {
+                            System.out.println("Stelnw invite ston: " + s[j]);
+                            Inv_Users = new User(AliveUsersList.get(i).getNickname(), AliveUsersList.get(i).getPort(), AliveUsersList.get(i).isStatus());
+                            System.out.println(Inv_Users.getPort());
+                            MultiChatList.add(Inv_Users);
+                            first = true;
+                            break;
+                        }
+                    }
                 }
             }
+            MultiToChatThread thread = new MultiToChatThread(Client_Window.MultiChatList);
+            thread.start();
         } catch (IOException ex) {
             Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButton3ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -287,7 +274,7 @@ public class Client_Window extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JLabel jLabel1;
@@ -296,132 +283,155 @@ public class Client_Window extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 }
 
-class InviteToChatThread extends Thread {
+class MultiToChatThread extends Thread {
 
-    protected static String sck1, sck2;
-    protected static Socket mySocket, invSocket;
+    protected ArrayList<User> SocketList;
+    protected Socket invSocket;
 
-    public InviteToChatThread(String sck1, String sck2) throws IOException {
-        this.sck1 = sck1;
-        this.sck2 = sck2;
-        mySocket = new Socket("127.0.0.1", parseInt(sck1));
-        invSocket = new Socket("127.0.0.1", parseInt(sck2));
+    public MultiToChatThread(ArrayList<User> SocketList) throws IOException {
+        this.SocketList = SocketList;
     }
 
     @Override
     public void run() {
-        ObjectOutputStream OUT = null;
+        System.out.println("Mphke sto thread");
+        for (int i = 0; i < Client_Window.MultiChatList.size(); i++) {
+            for (User user : Client_Window.MultiChatList) {
+                if (user.getNickname().equals(Client_Window.MultiChatList.get(i).getNickname())) {
+                    if (user.isStatus() == false) {
+                        try {
+                            invSocket = new Socket("127.0.0.1", parseInt(Client_Window.MultiChatList.get(i).getPort()));
+                            System.out.println(invSocket);
+                            ObjectOutputStream OUT = null;
+                            try {
+                                OUT = new ObjectOutputStream(invSocket.getOutputStream()); //Δημιουργιία ροών προς τον Client
+                                ObjectInputStream IN = new ObjectInputStream(invSocket.getInputStream());
+
+                                Message ChatInvitation = new Message(Client_Window.Current_User.getNickname(), "Invite");
+                                OUT.writeObject(ChatInvitation);
+                                OUT.flush();
+
+                                Message Reply = (Message) IN.readObject();
+                                if (Reply.getMessage1().equals("Accept")) {
+                                    System.out.println("Έναρξη συζήτησης");
+                                    Message I2PDestination = new Message(Client_Window.address);
+                                    OUT.writeObject(I2PDestination);
+
+                                    Chat_Window chat = new Chat_Window();
+                                    chat.Ports.add(Client_Window.MultiChatList);
+                                }
+
+                            } catch (IOException ex) {
+                                Logger.getLogger(MultiToChatThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (ClassNotFoundException ex) {
+                                Logger.getLogger(MultiToChatThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } catch (IOException ex) {
+                            Logger.getLogger(MultiToChatThread.class.getName()).log(Level.SEVERE, null, ex);
+
+                        }
+                        user.setStatus(true);
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+class ListeningThread extends Thread {
+
+    private int server;
+
+    public ListeningThread(int server) {
+        this.server = server;
+    }
+
+    @Override
+    public void run() {
         try {
-            OUT = new ObjectOutputStream(invSocket.getOutputStream()); //Δημιουργιία ροών προς τον Client
-            ObjectInputStream IN = new ObjectInputStream(invSocket.getInputStream());
+            ServerSocket serversocket = new ServerSocket(parseInt(Client_Window.Current_User.getPort()));
+            while (true) {
 
-            Message ChatInvitation = new Message("Greg", "Invitation");
-            OUT.writeObject(ChatInvitation);
+                try {
+                    Socket sock = serversocket.accept();
 
-            Message Reply = (Message) IN.readObject();
-            if (Reply.getMessage1().equals("Accept")) {
-                System.out.println("Έναρξη συζήτησης");
-                Message I2PDestination = new Message(mySocket.toString());
-                OUT.writeObject(I2PDestination);
+                    KentrikoThread receive = new KentrikoThread(sock);
+                    receive.start();
+                } catch (IOException ex) {
+                    Logger.getLogger(ListeningThread.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-
         } catch (IOException ex) {
-            Logger.getLogger(InviteToChatThread.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(InviteToChatThread.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                OUT.close();
-            } catch (IOException ex) {
-                Logger.getLogger(InviteToChatThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Logger.getLogger(ListeningThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
 
-class AnswerToInviteThread extends Thread {
+class KentrikoThread extends Thread {
 
-    protected static String sck2;
-    protected static Socket sck;
+    Socket socket;
 
-    public AnswerToInviteThread(String sck2) throws IOException {
-        this.sck2 = sck2;
-        sck = new Socket("127.0.0.1", parseInt(sck2));
+    public KentrikoThread(Socket socket) throws IOException {
+        this.socket = socket;
     }
 
     @Override
     public void run() {
+
         try {
-            ServerSocket sock = new ServerSocket(0000); //socket gia na steilw stoixeia kai na sundethw
-            
-            ObjectOutputStream OUT = new ObjectOutputStream(sck.getOutputStream()); //Δημιουργιία ροών προς τον Client
-            ObjectInputStream IN = new ObjectInputStream(sck.getInputStream());
-            Message mes1 = (Message) IN.readObject();
-            if (mes1.getMessage2().equals("Invitation")) {
+
+            ObjectOutputStream OUT1 = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream IN1 = new ObjectInputStream(socket.getInputStream());
+
+            Message KentrikoMessage = (Message) IN1.readObject();
+            if (KentrikoMessage.getMessage2().equals("Invite")) {
 
                 JDialog.setDefaultLookAndFeelDecorated(true); //mhnuma gia chat
-                int response = JOptionPane.showConfirmDialog(null, "Do you want to chat with " + mes1.getMessage1() + " ?", "Confirm",
+                int response = JOptionPane.showConfirmDialog(null, "Do you want to chat with " + KentrikoMessage.getMessage1() + " ?", "Confirm",
                         JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (response == JOptionPane.NO_OPTION) {
                     System.out.println("No button clicked");
-                    sck.close();
                 } else if (response == JOptionPane.YES_OPTION) {
-                    System.out.println("Yes button clicked");
-//                    String port;
-//                    port =  sock.getLocalPort().toString();
+                    OUT1.writeObject(new Message("Accept"));
+                    OUT1.flush();
 
-                    Message mes2 = new Message("Accept");
-                    OUT.writeObject(mes2);
+                    Message I2PAdress = (Message) IN1.readObject();
+                    int port = (int) I2PAdress.getMessage1();
+                    System.out.println("port" + port);
 
-                    Message I2PDestination = (Message) IN.readObject();
-                    System.out.println(I2PDestination);
-                    //sck = sock.accept();
-                    
-                    Chat_Window chat1 = new Chat_Window();
+                    Chat_Window chat = new Chat_Window();
+
+//                    Client_Window.OUT = new ObjectOutputStream(Client_Window.sck.getOutputStream()); //Δημιουργιία ροών προς τον Client
+//                    Client_Window.IN = new ObjectInputStream(Client_Window.sck.getInputStream());
+                    Message message = new Message(Client_Window.Current_User.getNickname(), Client_Window.Inv_Users.getNickname(), "Busy", true);
+                    System.out.println(message.getMessage1().toString() + message.getMessage2().toString());
+                    Client_Window.OUT.reset();
+                    Client_Window.OUT.writeObject(message);
+
+                    Client_Window.OUT.flush();
+                    System.out.println("Esteile");
+                    Client_Window.sck.close();
+
                 } else if (response == JOptionPane.CLOSED_OPTION) {
                     System.out.println("JOptionPane closed");
                 }
+            } else if (KentrikoMessage.getMessage2().equals("Chat_Message")) {
+                String keimeno = (String) KentrikoMessage.getMessage1();
+                if (Client_Window.first = true) {
+                    Chat_Window.jTextArea2.append(keimeno + "\n");
+                    Chat_Window.jTextArea2.setText(keimeno);
+//                OUT1.writeObject(keimeno);
+//                OUT1.flush();
+                }
+                Client_Window.first=false;
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(KentrikoThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Client_Window.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(KentrikoThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
 }
-
-class Syndeseis extends Thread { //Thread gia tis sundeseis twn sockets
-
-    String serversocket;
-    Socket socket;
-    ServerSocket server;
-    public Syndeseis(String serversocket, Socket socket) throws IOException {
-        this.serversocket = serversocket;
-        this.socket = socket;
-        server = new ServerSocket(parseInt(serversocket));
-    }
-
-    @Override
-    public void run() {
-        try {
-            server.accept();
-        } catch (IOException ex) {
-            Logger.getLogger(Syndeseis.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-}
-
-//class thread extends Thread{
-//        ServerSocket Server = new ServerSocket(5555);
-//        Users = new ArrayList ();
-//        while (true) {
-//
-//            Socket sock = Server.accept();
-//            
-//            ReceiveFromClientThread receive = new ReceiveFromClientThread(sock);
-//            Thread thread = new Thread(receive);
-//            thread.start();
-//}
-//}
