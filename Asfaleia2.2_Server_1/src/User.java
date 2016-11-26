@@ -1,22 +1,31 @@
 
 import java.io.Serializable;
 
+public class User implements Serializable {
 
-public class User implements Serializable{
+    protected String Nickname;
+    protected String Port;
+    protected boolean status;
 
-    protected static String Nickname;
-    protected static String Port;
-
-    public User(String Nickname, String Port) {
+    public User(String Nickname, String Port, boolean status) {
         this.Nickname = Nickname;
         this.Port = Port;
+        this.status = status;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public User(String Nickname) {
         this.Nickname = Nickname;
     }
 
-    public static String getPort() {
+    public String getPort() {
         return Port;
     }
 
@@ -24,7 +33,7 @@ public class User implements Serializable{
         this.Port = Port;
     }
 
-    public static String getNickname() {
+    public String getNickname() {
         return Nickname;
     }
 
@@ -36,7 +45,7 @@ public class User implements Serializable{
     public String toString() {
         return Nickname + Port;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
